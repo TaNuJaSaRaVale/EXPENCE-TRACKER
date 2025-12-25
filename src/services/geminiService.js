@@ -36,21 +36,25 @@ export const parseExpenseMessage = async (userMessage) => {
 You are an API that converts natural language expense messages into JSON.
 
 Return ONLY valid JSON.
-No explanation. No markdown.
+No explanation. No markdown. No extra text.
 
-Choose the "category" ONLY from:
-Food, Transport, Shopping, Bills, Entertainment, Others
-
+CURRENT DATE (IST): ${new Date().toLocaleDateString("en-CA", {
+  timeZone: "Asia/Kolkata"
+})}
 
 Rules:
+- Choose "category" ONLY from:
+  Food, Transport, Shopping, Bills, Entertainment, Others
 - If category is unclear, use "Others"
 - Amount must be a number
 - Date must be in YYYY-MM-DD format
-- Date must be real time as per indian standard time 
+- If the user DOES NOT mention a date, use CURRENT DATE (IST)
+- If the user mentions a date (yesterday, today, specific date), convert it correctly to YYYY-MM-DD (IST)
+- Title must be a short meaningful summary of the expense
 
 Schema:
 {
-  "title":string,
+  "title": string,
   "amount": number,
   "category": "Food | Transport | Shopping | Bills | Entertainment | Others",
   "date": "YYYY-MM-DD"
@@ -59,6 +63,7 @@ Schema:
 Message:
 "${userMessage}"
 `;
+
 
   const response = await generateText(prompt);
 
